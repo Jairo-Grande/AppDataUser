@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_application_1/src/data/models/data_user_model.dart';
-import 'package:flutter_application_1/src/domain/service/request_http.dart';
+import 'package:flutter_application_1/src/domain/repository/request_http.dart';
 
 import 'package:http/http.dart' as http;
 

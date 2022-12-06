@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/src/data/models/data_user_model.dart';
 import 'package:flutter_application_1/src/features/new_user_form/bloc/new_user_form/new_user_form_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,9 +12,12 @@ class NewUserFormPage extends StatefulWidget {
   State<NewUserFormPage> createState() => _NewUserFormPageState();
 }
 
-final nombre = TextEditingController();
+final primerNombre = TextEditingController();
+final segundoNombre = TextEditingController();
+final primerApellido = TextEditingController();
+final segundoApellido = TextEditingController();
+final fechaNacimiento = TextEditingController();
 
-//late FocusNode firstNameFocus;
 late FocusNode secondNameFocus;
 late FocusNode fistLastNameFocus;
 late FocusNode secondLastNameFocus;
@@ -55,7 +59,7 @@ class _NewUserFormPageState extends State<NewUserFormPage> {
                     isPassword: false,
                     keyBoardType: TextInputType.name,
                     label: TextEditingController(text: "Primer Nombre :"),
-                    textController: nombre,
+                    textController: primerNombre,
                     placeholder: "ingrese el primer nombre",
                     iconTextField: null,
                     nextFocus: secondNameFocus,
@@ -69,7 +73,7 @@ class _NewUserFormPageState extends State<NewUserFormPage> {
                     isPassword: false,
                     keyBoardType: TextInputType.name,
                     label: TextEditingController(text: "Segundo Nombre :"),
-                    textController: nombre,
+                    textController: segundoNombre,
                     placeholder: "Ingrese su segundo nombre",
                     iconTextField: null,
                     nextFocus: fistLastNameFocus,
@@ -87,7 +91,7 @@ class _NewUserFormPageState extends State<NewUserFormPage> {
                     isPassword: false,
                     keyBoardType: TextInputType.name,
                     label: TextEditingController(text: "Primer Apellido :"),
-                    textController: nombre,
+                    textController: primerApellido,
                     placeholder: "Ingrese el primer apellido",
                     iconTextField: null,
                     nextFocus: secondLastNameFocus,
@@ -101,10 +105,10 @@ class _NewUserFormPageState extends State<NewUserFormPage> {
                     isPassword: false,
                     keyBoardType: TextInputType.name,
                     label: TextEditingController(text: "Segundo Apellido :"),
-                    textController: nombre,
+                    textController: segundoApellido,
                     placeholder: "Ingrese el segundo apellido",
                     iconTextField: null,
-                    nextFocus: dateOfBirth,
+                    nextFocus: state.firstFocusNode,
                     action: null,
                     positionController: TextEditingController()),
               )
@@ -116,7 +120,7 @@ class _NewUserFormPageState extends State<NewUserFormPage> {
             isPassword: false,
             keyBoardType: TextInputType.datetime,
             label: TextEditingController(text: "Fecha de Nacimiento:"),
-            textController: nombre,
+            textController: fechaNacimiento,
             placeholder: "Seleccione su fecha de nacimiento",
             iconTextField: Icons.calendar_month_outlined,
             nextFocus: newUserFormBloc.state.addressList.first.focus,
@@ -133,14 +137,30 @@ class _NewUserFormPageState extends State<NewUserFormPage> {
               }),
           TextButton(
               style: TextButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  fixedSize: const Size.fromHeight(40)),
+                backgroundColor: Colors.blue,
+                fixedSize: const Size.fromWidth(200),
+              ),
               onPressed: () {
-                newUserFormBloc.add(const SendForm());
+                List<String> direccion = [];
+                for (CustomInput customInput in state.addressList) {
+                  direccion.add(customInput.textController.text);
+                }
+                newUserFormBloc.add(SendForm(
+                    context: context,
+                    dataUser: DataUser(
+                        direccion: direccion,
+                        fechaNacimiento: fechaNacimiento.text,
+                        primerApellido: primerApellido.text,
+                        primerNombre: primerNombre.text,
+                        segundoApellido: segundoApellido.text,
+                        segundoNombre: segundoNombre.text)));
               },
               child: const Text(
                 "Enviar Datos",
-                style: TextStyle(fontSize: 16, color: Colors.white),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
               ))
         ])));
       },

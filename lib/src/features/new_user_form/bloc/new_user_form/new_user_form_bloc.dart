@@ -1,13 +1,20 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/src/features/new_user_form/view/widgets/custom_input.dart';
+import 'package:flutter_application_1/src/features/new_user_form/view/widgets/custom_snack_bar.dart';
+
+import 'package:http/http.dart' as http;
+
+import '../../../../data/models/data_user_model.dart';
+import '../../../../domain/repository/request_http.dart';
 
 part 'new_user_form_event.dart';
 part 'new_user_form_state.dart';
 
 int initialIndex = 5;
-int focusIndex = 0;
 
 FocusNode initialAddressNode = FocusNode();
 
@@ -16,14 +23,14 @@ FocusNode focusNodeInitial = FocusNode();
 List<CustomInput> initialAddressList = [
   CustomInput(
     index: TextEditingController(text: "$initialIndex"),
-    focus: initialAddressNode,
+    focus: null,
     isPassword: false,
-    keyBoardType: TextInputType.datetime,
+    keyBoardType: TextInputType.streetAddress,
     label: TextEditingController(text: "Direccion :"),
     textController: TextEditingController(),
-    placeholder: "Seleccione su fecha de nacimiento",
+    placeholder: "Agregue la direccion",
     iconTextField: Icons.add,
-    nextFocus: focusNodeInitial,
+    nextFocus: null,
     action: null,
     positionController: TextEditingController(),
   )
@@ -40,8 +47,6 @@ class NewUserFormBloc extends Bloc<NewUserFormEvent, NewUserFormState> {
   }
 
   _addAddresUser(AddAddressUser event, Emitter<NewUserFormState> emit) {
-    FocusNode nextNewFocusNode = FocusNode();
-
     initialIndex += 1;
 
     int contador = 1;
@@ -50,15 +55,15 @@ class NewUserFormBloc extends Bloc<NewUserFormEvent, NewUserFormState> {
 
     CustomInput newAddressInput = CustomInput(
       index: TextEditingController(text: "$initialIndex"),
-      focus: nextNewFocusNode,
+      focus: null,
       isPassword: false,
       keyBoardType: TextInputType.streetAddress,
       label: TextEditingController(),
       positionController: TextEditingController(),
       textController: TextEditingController(),
-      placeholder: "Seleccione su fecha de nacimiento",
+      placeholder: "Agregue la direccion",
       iconTextField: Icons.close,
-      nextFocus: initialAddressList[0].focus,
+      nextFocus: null,
       action: null,
     );
 
@@ -75,8 +80,6 @@ class NewUserFormBloc extends Bloc<NewUserFormEvent, NewUserFormState> {
       contador += 1;
       emit(state.copyWith(addressList: initialAddressList));
     }
-
-    focusIndex += 1;
   }
 
   _removeAddressUser(DeleteAddressUser event, Emitter<NewUserFormState> emit) {
@@ -88,7 +91,6 @@ class NewUserFormBloc extends Bloc<NewUserFormEvent, NewUserFormState> {
         addressToRemove = address;
       }
     }
-    addressToRemove.focus.dispose();
     initialAddressList.remove(addressToRemove);
 
     //Validar los labels de la lista para que se muestren de manera correcta.
@@ -104,5 +106,27 @@ class NewUserFormBloc extends Bloc<NewUserFormEvent, NewUserFormState> {
     emit(state.copyWith(addressList: initialAddressList));
   }
 
-  Future _sendForm(SendForm event, Emitter<NewUserFormState> emit) async {}
+  Future _sendForm(SendForm event, Emitter<NewUserFormState> emit,
+      [bool mounted = true]) async {
+    http.Response response;
+    response = await Request().postUserForm(event.dataUser);
+
+    if (response.statusCode == HttpStatus.ok) {
+      if (!mounted) return;
+      // Navigator.of(event.context).pop();
+      toggleConfirmBotton(event.context);
+    } else {
+      print("error de conexion");
+    }
+  }
+
+  void toggleConfirmBotton(BuildContext context) {
+    CustomSnackBar(context, const Text('Registro enviado con exito'),
+        backgroundColor: Colors.green, snackBarAction: null);
+  }
+
+  void toggleErrorBotton(BuildContext context) {
+    CustomSnackBar(context, const Text('Registro enviado con exito'),
+        backgroundColor: Colors.green, snackBarAction: null);
+  }
 }
