@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/src/core/shared_widgets/dialogo_alerta.dart';
 import 'package:flutter_application_1/src/core/shared_widgets/loading_alert.dart';
+import 'package:flutter_application_1/src/data/models/data_user_model.dart';
 import 'package:flutter_application_1/src/features/historial/bloc/bloc/historial_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,7 +18,10 @@ class HistorialPage extends StatelessWidget {
       child: BlocConsumer<HistorialBloc, HistorialState>(
         listener: (context, state) {
           if (state is ErrorCargandoHistorial) {
-            print("error Cargando historial");
+            dialogoAlerta(
+                context: context,
+                titulo: "Error de conexión",
+                subtitulo: "Se produjo un error inesperado.");
           } else if (state is CargandoHistorial) {
             loadingAlert(context, "Obteniendo Historial");
           } else if (state is MostrarHistorial) {
@@ -24,19 +29,23 @@ class HistorialPage extends StatelessWidget {
           }
         },
         builder: (context, state) {
-          /*    if (state is ErrorCargandoHistorial) {
-            print("Error cargando el historial");
-            return (Text("Error"));
-          } else if (state is CargandoHistorial) {
-            loadingAlert(context, "Obteniendo Historial");
-          } else */
           if (state is MostrarHistorial) {
+            List<DataUser> listadoUsuarios = [];
+            state.dataUser.forEach((k, DataUser data) => listadoUsuarios.add(
+                DataUser(
+                    direccion: data.direccion,
+                    fechaNacimiento: data.fechaNacimiento,
+                    primerApellido: data.primerApellido,
+                    primerNombre: data.primerNombre,
+                    segundoApellido: data.segundoApellido,
+                    segundoNombre: data.segundoNombre)));
+
             return ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: 12,
+                itemCount: state.dataUser.length,
                 itemBuilder: ((context, index) {
-                  return const CustomProfileCard();
+                  return CustomProfileCard(dataUser: listadoUsuarios[index]);
                 }));
           } else {
             return Container();
