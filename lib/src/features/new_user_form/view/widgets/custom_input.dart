@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/src/features/new_user_form/bloc/new_user_form/new_user_form_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CustomInput extends StatefulWidget {
@@ -138,7 +138,7 @@ class _CustomInputState extends State<CustomInput> {
         .then((value) {
       if (value != null) {
         widget.textController.text =
-            "${value!.day} / ${value.month} / ${value.year}";
+            "${value.day} / ${value.month} / ${value.year}";
       }
       return;
     });
