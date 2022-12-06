@@ -117,8 +117,8 @@ class NewUserFormBloc extends Bloc<NewUserFormEvent, NewUserFormState> {
       toggleConfirmBotton(event.context);
     } else {
       if (!mounted) return;
-      resetControllers(event.controllers);
       Navigator.of(event.context).pop();
+      resetControllers(event.controllers);
       toggleErrorBotton(event.context);
     }
   }
