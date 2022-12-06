@@ -20,7 +20,11 @@ class ShowAddressUserList extends NewUserFormEvent {
 }
 
 class SendForm extends NewUserFormEvent {
+  final List<TextEditingController> controllers;
   final BuildContext context;
   final DataUser dataUser;
-  const SendForm({required this.dataUser, required this.context});
+  const SendForm(
+      {required this.dataUser,
+      required this.context,
+      required this.controllers});
 }

@@ -17,7 +17,6 @@ part 'new_user_form_state.dart';
 int initialIndex = 5;
 
 FocusNode initialAddressNode = FocusNode();
-
 FocusNode focusNodeInitial = FocusNode();
 
 List<CustomInput> initialAddressList = [
@@ -113,10 +112,20 @@ class NewUserFormBloc extends Bloc<NewUserFormEvent, NewUserFormState> {
 
     if (response.statusCode == HttpStatus.ok) {
       if (!mounted) return;
-      // Navigator.of(event.context).pop();
+      Navigator.of(event.context).pop();
+      resetControllers(event.controllers);
       toggleConfirmBotton(event.context);
     } else {
-      print("error de conexion");
+      if (!mounted) return;
+      resetControllers(event.controllers);
+      Navigator.of(event.context).pop();
+      toggleErrorBotton(event.context);
+    }
+  }
+
+  void resetControllers(List<TextEditingController> controllers) {
+    for (TextEditingController controller in controllers) {
+      controller.text = "";
     }
   }
 
@@ -126,7 +135,7 @@ class NewUserFormBloc extends Bloc<NewUserFormEvent, NewUserFormState> {
   }
 
   void toggleErrorBotton(BuildContext context) {
-    CustomSnackBar(context, const Text('Registro enviado con exito'),
-        backgroundColor: Colors.green, snackBarAction: null);
+    CustomSnackBar(context, const Text('Ocurrio un problema con el envio'),
+        backgroundColor: Colors.red, snackBarAction: null);
   }
 }
