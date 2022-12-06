@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/src/data/models/data_user_model.dart';
+import 'package:flutter_application_1/src/features/historial/view/pages/user_details_page.dart';
 
 class CustomProfileCard extends StatelessWidget {
   final DataUser dataUser;
@@ -11,7 +12,13 @@ class CustomProfileCard extends StatelessWidget {
       margin: const EdgeInsets.all(5),
       elevation: 3,
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => UserDetails(dataUser: dataUser)),
+          );
+        },
         child: Row(
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

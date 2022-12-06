@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/src/data/models/data_user_model.dart';
 
 class UserDetails extends StatelessWidget {
-  const UserDetails({super.key});
+  final DataUser dataUser;
+  const UserDetails({super.key, required this.dataUser});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
       ),
       body: SafeArea(
         child: Column(
@@ -16,65 +17,112 @@ class UserDetails extends StatelessWidget {
           children: [
             SizedBox(
                 child: Column(
-              children: const [
-                CircleAvatar(
-                  radius: 35,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 60,
+                    child: Text(
+                        "${dataUser.primerNombre.substring(0, 1).toUpperCase()}${dataUser.primerApellido.substring(0, 1).toUpperCase()}",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 50,
+                        )),
+                  ),
                 ),
-                Text("Jairo Grande",
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 25)),
-                Text("Joined jul. 2022"),
-                SizedBox(
+                Text("${dataUser.primerNombre} ${dataUser.primerApellido}"),
+                const SizedBox(
                   height: 30,
                 )
               ],
             )),
             const Divider(),
-            SizedBox(
-              child: Column(children: [
-                IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () {
-                      print("Edit Button");
-                    }),
-                const SingleChildScrollView(
-                    child: Text(
-                        "Profiles with personal info and coonnected Social media appear more trustworthy",
-                        textAlign: TextAlign.center)),
-                TextButton(onPressed: () {}, child: const Text("Read More."))
-              ]),
-            ),
-            const Divider(),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text("VERIFIED INFO",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black54,
-                              fontSize: 12)),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text("Datos del usuario",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
+                                fontSize: 18)),
+                      ],
                     ),
-                    SizedBox()
-                  ],
-                ),
-                const SizedBox(height: 50),
-                const Text("No reviews yet"),
-                const SizedBox(height: 50),
-                const Divider(),
-              ],
-            )
+                  ),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Nombre Completo:",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          "${dataUser.primerNombre} ${dataUser.segundoNombre} ${dataUser.primerApellido} ${dataUser.segundoApellido}",
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Fecha de Nacimiento:",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          dataUser.fechaNacimiento,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: dataUser.direccion.length,
+                      itemBuilder: (_, index) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Dirección: ${index + 1}",
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 10),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                dataUser.direccion[index],
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        elevation: 5,
-        onPressed: () {},
-        child: const Icon(Icons.edit),
       ),
     );
   }

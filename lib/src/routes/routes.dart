@@ -8,5 +8,4 @@ final Map<String, Widget Function(BuildContext)> appRoutes = {
   'historial': (_) => const HistorialPage(),
   'newUser': (_) => const NewUserFormPage(),
   'home': (_) => const HomePage(),
-  'userDetails': (_) => const UserDetails()
 };
