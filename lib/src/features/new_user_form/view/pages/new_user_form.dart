@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/src/core/shared_widgets/dialogo_alerta.dart';
 import 'package:flutter_application_1/src/core/shared_widgets/loading_alert.dart';
 import 'package:flutter_application_1/src/data/models/data_user_model.dart';
 import 'package:flutter_application_1/src/features/new_user_form/bloc/new_user_form/new_user_form_bloc.dart';
@@ -144,6 +145,7 @@ class _NewUserFormPageState extends State<NewUserFormPage> {
               onPressed: () {
                 List<String> direccion = [];
                 List<TextEditingController> controllers = [];
+                bool canSummit = true;
                 for (CustomInput customInput in state.addressList) {
                   direccion.add(customInput.textController.text);
                   controllers.add(customInput.textController);
@@ -154,19 +156,33 @@ class _NewUserFormPageState extends State<NewUserFormPage> {
                 controllers.add(segundoApellido);
                 controllers.add(segundoNombre);
 
-                newUserFormBloc.add(
-                  SendForm(
+                //validacion para probar que todos los controllers tengan contenido...
+                for (TextEditingController controller in controllers) {
+                  if (controller.text == "") {
+                    canSummit = false;
+                  }
+                }
+
+                if (canSummit == true) {
+                  newUserFormBloc.add(
+                    SendForm(
+                        context: context,
+                        dataUser: DataUser(
+                            direccion: direccion,
+                            fechaNacimiento: fechaNacimiento.text,
+                            primerApellido: primerApellido.text,
+                            primerNombre: primerNombre.text,
+                            segundoApellido: segundoApellido.text,
+                            segundoNombre: segundoNombre.text),
+                        controllers: controllers),
+                  );
+                  loadingAlert(context, "Enviando respuestas");
+                } else {
+                  dialogoAlerta(
                       context: context,
-                      dataUser: DataUser(
-                          direccion: direccion,
-                          fechaNacimiento: fechaNacimiento.text,
-                          primerApellido: primerApellido.text,
-                          primerNombre: primerNombre.text,
-                          segundoApellido: segundoApellido.text,
-                          segundoNombre: segundoNombre.text),
-                      controllers: controllers),
-                );
-                loadingAlert(context, "Enviando respuestas");
+                      titulo: "Informacion no valida.",
+                      subtitulo: "Por favor ingrese todos los campos");
+                }
               },
               child: const Text(
                 "Enviar Datos",

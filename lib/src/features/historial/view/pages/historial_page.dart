@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/src/core/shared_widgets/dialogo_alerta.dart';
 import 'package:flutter_application_1/src/core/shared_widgets/loading_alert.dart';
 import 'package:flutter_application_1/src/data/models/data_user_model.dart';
 import 'package:flutter_application_1/src/features/historial/bloc/bloc/historial_bloc.dart';
@@ -17,7 +18,10 @@ class HistorialPage extends StatelessWidget {
       child: BlocConsumer<HistorialBloc, HistorialState>(
         listener: (context, state) {
           if (state is ErrorCargandoHistorial) {
-            Navigator.of(context).pop();
+            dialogoAlerta(
+                context: context,
+                titulo: "Error de conexión",
+                subtitulo: "Se produjo un error inesperado.");
           } else if (state is CargandoHistorial) {
             loadingAlert(context, "Obteniendo Historial");
           } else if (state is MostrarHistorial) {
